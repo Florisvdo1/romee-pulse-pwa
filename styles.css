@@ -1,0 +1,109 @@
+/* styles.css — extra smaak bovenop Tailwind */
+:root {
+  --radius: 16px;
+}
+
+/* Pulsey ring backdrop */
+.pulse-rings {
+  position: absolute;
+  inset: -120px -80px auto auto;
+  pointer-events: none;
+}
+.pulse-rings .ring {
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  border-radius: 9999px;
+  border: 1px dashed rgba(255,255,255,0.28);
+  animation: ring 3.5s ease-out infinite;
+  box-shadow: 0 0 80px rgba(59,130,246,0.35), inset 0 0 30px rgba(255,255,255,0.08);
+}
+.pulse-rings .ring:nth-child(2){ animation-delay: .6s; }
+.pulse-rings .ring:nth-child(3){ animation-delay: 1.2s; }
+
+/* Cartoon edges */
+.card-border {
+  border: 2px solid rgba(255,255,255,0.10);
+  outline: 3px solid rgba(0,0,0,0.15);
+  outline-offset: -3px;
+}
+
+/* Switch (shadcn inspired) */
+.ui-switch {
+  --w: 44px;
+  --h: 26px;
+  --p: 3px;
+  inline-size: var(--w);
+  block-size: var(--h);
+  border-radius: 9999px;
+  background: rgba(255,255,255,.15);
+  position: relative;
+  transition: background .2s ease;
+}
+.ui-switch[data-checked="true"] { background: linear-gradient(90deg, #22d3ee, #3b82f6); }
+.ui-switch .knob {
+  position: absolute;
+  inset-block: var(--p);
+  inset-inline-start: var(--p);
+  inline-size: calc(var(--h) - 2*var(--p));
+  block-size: calc(var(--h) - 2*var(--p));
+  border-radius: 9999px;
+  background: white;
+  transform: translateX(0);
+  transition: transform .2s ease;
+  box-shadow: 0 6px 18px rgba(0,0,0,.3);
+}
+.ui-switch[data-checked="true"] .knob { transform: translateX(calc(var(--w) - var(--h))); }
+
+/* Textarea */
+.ui-textarea {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 12px;
+  padding: 10px 12px;
+  resize: vertical;
+}
+
+/* Progress radial */
+.progress-wrap {
+  position: relative; inline-size: 72px; block-size: 72px;
+}
+.progress-wrap svg { position: absolute; inset: 0; }
+.progress-wrap .center {
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  font-weight: 700;
+}
+
+/* Floating FAB */
+.fab {
+  position: fixed;
+  right: 16px; bottom: 20px;
+  border-radius: 9999px;
+  padding: 14px 18px;
+  background: linear-gradient(90deg,#22d3ee,#6366f1);
+  color: white;
+  box-shadow: 0 12px 40px rgba(79,70,229,.45);
+}
+
+/* Sticky bottom nav (simple) */
+.bottom-nav {
+  position: sticky; bottom: 0;
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255,255,255,0.12);
+}
+
+.hero-mascot {
+  filter: drop-shadow(0 14px 30px rgba(0,0,0,.35));
+}
+
+/* Installer chip */
+.install-chip {
+  position: fixed; left: 50%; bottom: 84px; transform: translateX(-50%);
+  display: flex; gap: 10px; align-items: center;
+  background: rgba(15,23,42,0.7);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 9999px; padding: 10px 14px;
+  box-shadow: 0 8px 30px rgba(0,0,0,.35);
+}
