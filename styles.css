@@ -1,109 +1,185 @@
-/* styles.css — extra smaak bovenop Tailwind */
-:root {
-  --radius: 16px;
+/* Pulse Planner – styles.css */
+:root{
+  --bg1: #0ea5e9;
+  --bg2: #7c3aed;
+  --card:#0b1020cc;
+  --text:#e6e8ee;
+  --muted:#aeb4c2;
+  --accent:#22d3ee;
+  --accent-2:#f472b6;
+  --ok:#4ade80;
+  --err:#f43f5e;
+  --shadow: 0 10px 30px rgba(0,0,0,.35);
 }
 
-/* Pulsey ring backdrop */
-.pulse-rings {
-  position: absolute;
-  inset: -120px -80px auto auto;
-  pointer-events: none;
-}
-.pulse-rings .ring {
-  position: absolute;
-  width: 220px;
-  height: 220px;
-  border-radius: 9999px;
-  border: 1px dashed rgba(255,255,255,0.28);
-  animation: ring 3.5s ease-out infinite;
-  box-shadow: 0 0 80px rgba(59,130,246,0.35), inset 0 0 30px rgba(255,255,255,0.08);
-}
-.pulse-rings .ring:nth-child(2){ animation-delay: .6s; }
-.pulse-rings .ring:nth-child(3){ animation-delay: 1.2s; }
-
-/* Cartoon edges */
-.card-border {
-  border: 2px solid rgba(255,255,255,0.10);
-  outline: 3px solid rgba(0,0,0,0.15);
-  outline-offset: -3px;
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+  color:var(--text);
+  background: radial-gradient(1200px 800px at 20% -10%, rgba(255,255,255,.12), transparent 45%),
+              radial-gradient(900px 600px at 110% 10%, rgba(255,255,255,.12), transparent 45%),
+              linear-gradient(130deg, #020617, #0a0927 65%);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
 }
 
-/* Switch (shadcn inspired) */
-.ui-switch {
-  --w: 44px;
-  --h: 26px;
-  --p: 3px;
-  inline-size: var(--w);
-  block-size: var(--h);
-  border-radius: 9999px;
-  background: rgba(255,255,255,.15);
-  position: relative;
+.bg::before{
+  content:"";
+  position:fixed; inset:0;
+  background:
+    radial-gradient(1100px 600px at 0% 0%, #0ea5e975, transparent 60%),
+    radial-gradient(900px 600px at 100% 15%, #7c3aed75, transparent 60%);
+  filter: blur(50px) saturate(120%);
+  pointer-events:none;
+  z-index:-1;
+}
+
+.shell{
+  max-width:720px;
+  margin: env(safe-area-inset-top) auto env(safe-area-inset-bottom);
+  padding: 24px;
+}
+
+.app-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin: 4px 0 16px;
+}
+
+.brand{display:flex; align-items:center; gap:12px;}
+.logo-dot{
+  width:20px; height:20px; border-radius:50%;
+  background: conic-gradient(from 45deg, var(--accent), var(--accent-2), var(--accent));
+  box-shadow: 0 0 0 3px rgba(255,255,255,.08), 0 0 16px rgba(34,211,238,.55);
+}
+.title{font-size: clamp(20px, 3.5vw, 28px); margin:0; letter-spacing:.2px}
+
+.date-row{
+  display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+  margin-bottom: 12px;
+}
+.date-chip{
+  padding:8px 12px; border-radius:999px;
+  background:#ffffff14; color:#fff; border:1px solid #ffffff22;
+  backdrop-filter: blur(8px);
+}
+.streak{
+  padding:8px 12px; border-radius:999px; background:#10b98124; border:1px solid #10b98155; color:#d1fae5;
+}
+
+.card{
+  background: var(--card);
+  border:1px solid #ffffff1a;
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 16px;
+  backdrop-filter: blur(10px);
+}
+
+.card-head{
+  display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px;
+}
+.card-title{font-size:18px; margin:0}
+.progress{flex:1; height:8px; background:#ffffff14; border-radius:999px; overflow:hidden}
+.progress-bar{height:100%; width:0%; background: linear-gradient(90deg, var(--accent), var(--ok)); transition: width .35s ease}
+
+.list{list-style:none; margin: 12px 0 6px; padding:0}
+.item{
+  display:grid; grid-template-columns: 40px 1fr auto; gap:10px; align-items:center;
+  padding:10px 8px; border-radius:12px; border:1px solid #ffffff12;
+}
+.item + .item{margin-top:8px}
+.item:hover{background:#ffffff0a}
+.item.done .txt{opacity:.6; text-decoration: line-through;}
+
+.switch{
+  --w: 44px; --h:28px; --pad:3px;
+  position:relative; width:var(--w); height:var(--h);
+}
+.switch input{position:absolute; inset:0; opacity:0; cursor:pointer}
+.switch .track{
+  position:absolute; inset:0;
+  background:#ffffff1c; border:1px solid #ffffff2a; border-radius:999px;
   transition: background .2s ease;
 }
-.ui-switch[data-checked="true"] { background: linear-gradient(90deg, #22d3ee, #3b82f6); }
-.ui-switch .knob {
-  position: absolute;
-  inset-block: var(--p);
-  inset-inline-start: var(--p);
-  inline-size: calc(var(--h) - 2*var(--p));
-  block-size: calc(var(--h) - 2*var(--p));
-  border-radius: 9999px;
-  background: white;
-  transform: translateX(0);
-  transition: transform .2s ease;
-  box-shadow: 0 6px 18px rgba(0,0,0,.3);
+.switch .ball{
+  position:absolute; top:var(--pad); left:var(--pad); width:calc(var(--h) - var(--pad)*2); height:calc(var(--h) - var(--pad)*2);
+  border-radius:50%; background:#fff; box-shadow: 0 2px 10px rgba(0,0,0,.35);
+  transition: transform .25s cubic-bezier(.2,.8,.2,1), background .25s ease;
 }
-.ui-switch[data-checked="true"] .knob { transform: translateX(calc(var(--w) - var(--h))); }
+.switch input:checked ~ .track{background:linear-gradient(90deg, var(--accent), var(--ok))}
+.switch input:checked ~ .ball{transform: translateX(calc(var(--w) - var(--h))); background:#0b1020}
 
-/* Textarea */
-.ui-textarea {
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.18);
-  border-radius: 12px;
-  padding: 10px 12px;
-  resize: vertical;
+.txt{font-size:15px; line-height:1.35}
+.item .del{
+  appearance:none; background:#ffffff12; color:#fff; border:1px solid #ffffff2a;
+  padding:8px 10px; border-radius:10px; cursor:pointer;
 }
+.item .del:hover{background:#ffffff22}
 
-/* Progress radial */
-.progress-wrap {
-  position: relative; inline-size: 72px; block-size: 72px;
+.add-row{display:flex; gap:10px; margin-top:10px}
+.input{
+  flex:1; padding:12px 14px; border-radius:12px; background:#ffffff0f; color:#fff;
+  border:1px solid #ffffff22; outline:none;
 }
-.progress-wrap svg { position: absolute; inset: 0; }
-.progress-wrap .center {
-  position: absolute; inset: 0;
-  display: grid; place-items: center;
-  font-weight: 700;
+.input::placeholder{color:#cbd5e180}
+.btn{
+  appearance:none; background:linear-gradient(90deg, var(--accent), var(--accent-2));
+  color:#0b1020; font-weight:700; border:none; border-radius:12px; padding:12px 14px; cursor:pointer;
+  box-shadow: 0 6px 16px rgba(0,0,0,.3);
 }
+.btn:hover{filter:brightness(1.04)}
+.ghost{
+  appearance:none; background:#ffffff10; color:#fff; border:1px solid #ffffff22;
+  border-radius:12px; padding:10px 12px; cursor:pointer;
+}
+.row-actions{display:flex; justify-content:space-between; gap:10px; margin-top:12px}
 
-/* Floating FAB */
-.fab {
-  position: fixed;
-  right: 16px; bottom: 20px;
-  border-radius: 9999px;
-  padding: 14px 18px;
-  background: linear-gradient(90deg,#22d3ee,#6366f1);
-  color: white;
-  box-shadow: 0 12px 40px rgba(79,70,229,.45);
+.footnote{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  margin:14px 4px 8px; color:var(--muted); font-size:13px;
 }
 
-/* Sticky bottom nav (simple) */
-.bottom-nav {
-  position: sticky; bottom: 0;
-  background: rgba(255,255,255,0.06);
-  backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(255,255,255,0.12);
+/* Easter Egg */
+.egg{position:fixed; inset:0; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,.45); backdrop-filter: blur(3px); z-index:999}
+.egg.hidden{display:none}
+.egg-card{
+  width:min(92vw, 360px); background:#fff; color:#111; border-radius:22px; padding:18px 16px 24px; box-shadow:0 14px 40px rgba(0,0,0,.35); position:relative;
+}
+.mascot{display:flex; align-items:center; justify-content:center}
+.mascot-svg{width:120px; height:120px}
+.mascot-svg .hand{animation: wave 1.2s ease-in-out infinite}
+.mascot-svg .mascot-face{animation: nod 1.6s ease-in-out infinite}
+@keyframes wave{0%{transform:translateY(0)} 50%{transform:translateY(-6px)} 100%{transform:translateY(0)}}
+@keyframes nod{0%{transform:rotate(-6deg)} 50%{transform:rotate(6deg)} 100%{transform:rotate(-6deg)}}
+
+.egg-title{font-weight:800; font-size:18px; text-align:center; margin:8px 0 4px}
+.egg-sub{font-size:14px; text-align:center; color:#555; margin:0 0 10px}
+.egg-close{display:block; margin: 0 auto}
+.confetti{position:absolute; inset:0; pointer-events:none; overflow:hidden}
+.confetti .dot{
+  position:absolute; width:8px; height:8px; border-radius:50%; opacity:0; animation: pop 900ms ease-out forwards;
+}
+@keyframes pop{
+  0%{transform:translateY(0) scale(.2); opacity:.0}
+  60%{transform:translateY(-24px) scale(1); opacity:1}
+  100%{transform:translateY(6px) scale(.9); opacity:0}
 }
 
-.hero-mascot {
-  filter: drop-shadow(0 14px 30px rgba(0,0,0,.35));
+/* Install button hint */
+.install-btn[hidden]{display:none}
+
+/* noscript */
+.noscript{
+  position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+  background:#000; color:#fff; font-size:18px;
 }
 
-/* Installer chip */
-.install-chip {
-  position: fixed; left: 50%; bottom: 84px; transform: translateX(-50%);
-  display: flex; gap: 10px; align-items: center;
-  background: rgba(15,23,42,0.7);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 9999px; padding: 10px 14px;
-  box-shadow: 0 8px 30px rgba(0,0,0,.35);
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .progress-bar, .mascot-svg .hand, .mascot-svg .mascot-face{animation:none !important; transition:none !important}
 }

@@ -1,127 +1,93 @@
-<!DOCTYPE html>
-<html lang="nl">
+<!doctype html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <title>Pulse Planner · Romee</title>
-  <meta name="description" content="Een speelse, premium PWA activiteitenplanner voor Romee — Pulse-stijl, cartoon UI, offline en installeerbaar." />
   <meta name="theme-color" content="#0ea5e9" />
-  <link rel="manifest" href="./manifest.json">
-  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
-  <link rel="icon" type="image/png" sizes="512x512" href="./icons/icon-512.png">
-  <link rel="apple-touch-icon" href="./icons/icon-192.png">
-
-  <!-- Tailwind via CDN (JIT) -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    // Tailwind config inline (CDN variant)
-    tailwind.config = {
-      darkMode: ['class'],
-      theme: {
-        extend: {
-          fontFamily: {
-            display: ['ui-rounded', 'system-ui', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial'],
-            sans: ['Inter', 'system-ui', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial']
-          },
-          colors: {
-            pulse: {
-              50: '#eff6ff',
-              100: '#dbeafe',
-              200: '#bfdbfe',
-              300: '#93c5fd',
-              400: '#60a5fa',
-              500: '#3b82f6',
-              600: '#2563eb',
-              700: '#1d4ed8',
-              800: '#1e40af',
-              900: '#1e3a8a'
-            },
-            candy: {
-              500: '#ec4899',
-              600: '#db2777'
-            }
-          },
-          boxShadow: {
-            glass: '0 8px 40px rgba(0,0,0,0.2)',
-            neon: '0 0 0 1px rgba(255,255,255,0.08), 0 8px 30px rgba(99,102,241,0.35)'
-          },
-          keyframes: {
-            pulseFloat: {
-              '0%,100%': { transform: 'translateY(0)' },
-              '50%': { transform: 'translateY(-3px)' }
-            },
-            ring: {
-              '0%': { transform: 'scale(0.9)', opacity: '0.6' },
-              '70%': { transform: 'scale(1.6)', opacity: '0' },
-              '100%': { transform: 'scale(1.6)', opacity: '0' }
-            },
-            shimmer: {
-              '0%': { backgroundPosition: '-200% 0' },
-              '100%': { backgroundPosition: '200% 0' }
-            }
-          },
-          animation: {
-            pulseFloat: 'pulseFloat 3s ease-in-out infinite',
-            ring: 'ring 3s ease-out infinite',
-            shimmer: 'shimmer 2.5s linear infinite'
-          }
-        }
-      }
-    };
-  </script>
-
-  <!-- Base styles -->
-  <link rel="stylesheet" href="./styles.css" />
-  <style>
-    /* Small inlined critical styles for background/pulse */
-    .pulse-bg {
-      --c1: 216 100% 50%;
-      --c2: 160 100% 50%;
-      --c3: 280 85% 60%;
-      background:
-        radial-gradient(1200px 800px at 100% -20%, hsl(var(--c3)/.25), transparent 60%),
-        radial-gradient(1000px 600px at -10% 0%, hsl(var(--c1)/.25), transparent 60%),
-        radial-gradient(800px 600px at 50% 120%, hsl(var(--c2)/.25), transparent 60%),
-        linear-gradient(180deg, hsl(222 47% 11%) 0%, hsl(222 45% 8%) 100%);
-    }
-    .glass {
-      backdrop-filter: blur(16px) saturate(120%);
-      -webkit-backdrop-filter: blur(16px) saturate(120%);
-      background: linear-gradient(180deg, rgba(255,255,255,0.12), rgba(255,255,255,0.06));
-      border: 1px solid rgba(255,255,255,0.12);
-    }
-  </style>
-
-  <!-- Import maps for ESM dependencies -->
-  <script type="importmap">
-  {
-    "imports": {
-      "react": "https://esm.sh/react@18?dev",
-      "react-dom/client": "https://esm.sh/react-dom@18/client?dev",
-      "framer-motion": "https://esm.sh/framer-motion@11?deps=react@18",
-      "lucide-react": "https://esm.sh/lucide-react@0.424.0?deps=react@18"
-    }
-  }
-  </script>
-
-  <!-- Babel standalone to transpile the JSX modules at runtime (cached by the SW for offline use) -->
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Pulse Planner</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./favicon.ico">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
+  <link rel="stylesheet" href="./styles.css">
 </head>
-<body class="min-h-screen text-white antialiased selection:bg-candy-600/40 selection:text-white pulse-bg">
-  <div id="root" class="min-h-screen"></div>
+<body>
+  <div class="bg" aria-hidden="true"></div>
+  <main class="shell" id="app">
+    <header class="app-header" id="appHeader">
+      <div class="brand">
+        <span class="logo-dot" aria-hidden="true"></span>
+        <h1 class="title">Pulse Planner</h1>
+      </div>
+      <button class="ghost install-btn" id="installBtn" aria-label="Install app" hidden>Install</button>
+    </header>
 
-  <!-- App entry; Babel compiles App.jsx on the fly into an ESM module -->
-  <script type="text/babel" data-type="module" src="./App.jsx"></script>
+    <section class="date-row">
+      <div class="date-chip" id="dateChip">Today</div>
+      <div class="streak" id="streakChip" title="Daily completion streak">🔥 0</div>
+    </section>
 
-  <script>
-    // Register service worker
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./service-worker.js', { scope: './' })
-          .catch(err => console.error('SW registration failed:', err));
-      });
-    }
-  </script>
-  <noscript>Deze app heeft JavaScript nodig.</noscript>
+    <section class="card">
+      <div class="card-head">
+        <h2 class="card-title">Today's Plan</h2>
+        <div class="progress">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+      </div>
+
+      <ul class="list" id="taskList" aria-live="polite">
+        <!-- tasks render here -->
+      </ul>
+
+      <form class="add-row" id="addForm" autocomplete="off">
+        <input id="addInput" class="input" type="text" inputmode="text" placeholder="Add a task…" aria-label="Task name" />
+        <button class="btn" id="addBtn" type="submit" aria-label="Add task">Add</button>
+      </form>
+
+      <div class="row-actions">
+        <button class="ghost" id="clearDoneBtn">Clear completed</button>
+        <button class="ghost" id="resetBtn">Reset list</button>
+      </div>
+    </section>
+
+    <footer class="footnote">
+      <span id="countsLabel">0 of 0 done</span>
+      <span class="hint">Tip: triple‑tap the header for a secret.</span>
+    </footer>
+  </main>
+
+  <!-- Easter Egg Overlay -->
+  <div id="eggOverlay" class="egg hidden" aria-live="polite" aria-modal="true" role="dialog">
+    <div class="egg-card">
+      <div class="mascot" aria-hidden="true">
+        <svg viewBox="0 0 120 120" class="mascot-svg" role="img" aria-label="Celebration mascot">
+          <defs>
+            <linearGradient id="g" x1="0" x2="1">
+              <stop offset="0" stop-color="#FFD166"/>
+              <stop offset="1" stop-color="#FCA311"/>
+            </linearGradient>
+          </defs>
+          <circle cx="60" cy="60" r="56" fill="url(#g)"></circle>
+          <g class="mascot-face">
+            <circle cx="45" cy="52" r="6" fill="#111"></circle>
+            <circle cx="75" cy="52" r="6" fill="#111"></circle>
+            <path d="M45 78 Q60 92 75 78" fill="none" stroke="#111" stroke-width="4" stroke-linecap="round"></path>
+          </g>
+          <circle class="hand" cx="100" cy="80" r="10" fill="#fff"></circle>
+        </svg>
+      </div>
+      <p class="egg-title">Nice! Plan completed 🎉</p>
+      <p class="egg-sub">You found a secret. Keep the streak going!</p>
+      <button class="btn egg-close" id="eggCloseBtn" aria-label="Close">Close</button>
+      <div class="confetti" aria-hidden="true"></div>
+    </div>
+  </div>
+
+  <noscript>
+    <div class="noscript">This app needs JavaScript enabled.</div>
+  </noscript>
+
+  <script src="./app.js"></script>
 </body>
 </html>
